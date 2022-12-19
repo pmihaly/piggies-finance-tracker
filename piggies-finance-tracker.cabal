@@ -32,7 +32,11 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      HUnit ==1.6.2.0
+    , QuickCheck ==2.14.2
+    , base >=4.7 && <5
+    , containers ==0.6.5.1
+    , hspec ==2.9.7
   default-language: Haskell2010
 
 executable piggies-finance-tracker-exe
@@ -43,7 +47,11 @@ executable piggies-finance-tracker-exe
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      HUnit ==1.6.2.0
+    , QuickCheck ==2.14.2
+    , base >=4.7 && <5
+    , containers ==0.6.5.1
+    , hspec ==2.9.7
     , piggies-finance-tracker
   default-language: Haskell2010
 
@@ -56,6 +64,10 @@ test-suite piggies-finance-tracker-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      HUnit ==1.6.2.0
+    , QuickCheck ==2.14.2
+    , base >=4.7 && <5
+    , containers ==0.6.5.1
+    , hspec ==2.9.7
     , piggies-finance-tracker
   default-language: Haskell2010

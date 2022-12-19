@@ -1,0 +1,62 @@
+# PiggyManagement
+piggies-to-manage: # HashMap PiggyId PiggyDetails
+  - - wise
+    - name: wise
+  - - ib-tbsz-1
+    - name: ib-tbsz-1
+  - - revolut
+  - - name: revolut
+
+# PiggyBalance
+piggy-balances: # HashMap PiggyId { balance: Money } (exported constructor only allowing NonZeroMoney, but internally zero account is accepted)
+  - - wise
+    - balance: 1000
+  - - ib-tbsz-1
+    - balance: 20000
+  - - revolut
+    - balance: 500
+
+# PiggyInvestments
+piggy-investments: # HashMap investmentId investment
+  - - investment-kPlnypNRFICGFN5fT2JuX # investment-nanoid
+    - asset: WVCE
+      piggy: ib-tbsz-1
+      shares: 138 # NonZeroDouble
+      enriched-at: 2022-12-14T00:00:00Z
+  - - investment-hY63Efn3342ar1MVdYwfm
+    - asset: PMAP-2029/J-1M
+      piggy: ib-tbsz-1
+      shares: 1
+      enriched-at: 2022-12-14T00:00:00Z
+      maturity: 2023-12-14T00:00:00Z
+
+assets: # HashMap AssetName { worthPerShare: PosNonZeroMoney }
+  - - WVCE
+    - worth-per-share: 36714.32
+  - - PMAP-2029/J-1M
+    - worth-per-share: 1000000 # modeling fixed-income interest with asset-value-changed
+
+# shared between contexts
+events:
+  - type: moved-between-piggies
+    from-piggy: wise
+    to-piggy: savings
+    amount: 100
+  - type: taken-from-piggy
+    from-piggy: savings
+    amount: 200
+  - type: added-to-piggy
+    to-piggy: retirement
+    amount: 500
+  - type: investment-started
+    piggy: ib-tbsz-1
+    name: BTC
+    shares: 0.0123
+    enriched-at: 2021-12-15T00:00:00Z
+  - type: investment-finished
+    piggy: ib-tbsz-1
+    investment: BTC
+    shares: 0.0012
+  - type: asset-value-changed
+    name: GOOG
+    percentage: 5

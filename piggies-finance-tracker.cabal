@@ -27,6 +27,7 @@ library
   exposed-modules:
       Lib
       Shared.ValueObjects.Text50
+      Shared.ValueObjects.Text500
   other-modules:
       Paths_piggies_finance_tracker
   hs-source-dirs:
@@ -62,6 +63,7 @@ test-suite piggies-finance-tracker-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Shared.ValueObjects.Text500Spec
       Shared.ValueObjects.Text50Spec
       Paths_piggies_finance_tracker
   hs-source-dirs:

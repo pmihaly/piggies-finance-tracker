@@ -27,6 +27,7 @@ library
   exposed-modules:
       Lib
       Shared.ValueObjects.Id
+      Shared.ValueObjects.Money
       Shared.ValueObjects.NonZero
       Shared.ValueObjects.PiggyId
       Shared.ValueObjects.Positive

@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Shared.ValueObjects.Id
       Shared.ValueObjects.NonZero
       Shared.ValueObjects.Positive
       Shared.ValueObjects.Text50

@@ -38,6 +38,21 @@ library
       Paths_piggies_finance_tracker
   hs-source-dirs:
       src
+  default-extensions:
+      ConstraintKinds
+      DeriveGeneric
+      DerivingStrategies
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      OverloadedStrings
+      RecordWildCards
+      ScopedTypeVariables
+      StandaloneDeriving
+      TupleSections
+      TypeApplications
+      ViewPatterns
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       HUnit ==1.6.2.0
@@ -54,6 +69,21 @@ executable piggies-finance-tracker-exe
       Paths_piggies_finance_tracker
   hs-source-dirs:
       app
+  default-extensions:
+      ConstraintKinds
+      DeriveGeneric
+      DerivingStrategies
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      OverloadedStrings
+      RecordWildCards
+      ScopedTypeVariables
+      StandaloneDeriving
+      TupleSections
+      TypeApplications
+      ViewPatterns
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       HUnit ==1.6.2.0
@@ -76,6 +106,21 @@ test-suite piggies-finance-tracker-test
       Paths_piggies_finance_tracker
   hs-source-dirs:
       test
+  default-extensions:
+      ConstraintKinds
+      DeriveGeneric
+      DerivingStrategies
+      GeneralizedNewtypeDeriving
+      InstanceSigs
+      KindSignatures
+      LambdaCase
+      OverloadedStrings
+      RecordWildCards
+      ScopedTypeVariables
+      StandaloneDeriving
+      TupleSections
+      TypeApplications
+      ViewPatterns
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       HUnit ==1.6.2.0

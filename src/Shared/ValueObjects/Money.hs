@@ -1,6 +1,5 @@
-{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE EmptyDataDeriving #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Shared.ValueObjects.Money (Money (..), MoneyError, mkMoney) where
 

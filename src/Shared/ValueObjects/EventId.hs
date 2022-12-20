@@ -1,6 +1,4 @@
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ImportQualifiedPost #-} 
 
 module Shared.ValueObjects.EventId (EventId (..), mkEventId, EventIdError (..)) where
 

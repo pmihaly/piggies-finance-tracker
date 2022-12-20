@@ -1,6 +1,4 @@
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
-
 module Shared.ValueObjects.Id (Id (..), mkId, IdError (..)) where
 
 import Control.Category ((>>>))

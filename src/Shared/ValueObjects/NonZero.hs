@@ -1,7 +1,5 @@
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE EmptyDataDeriving #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveFunctor #-}
 
 module Shared.ValueObjects.NonZero (NonZero (..), mkNonZero, NonZeroError (..)) where
 

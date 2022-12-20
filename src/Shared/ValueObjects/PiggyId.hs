@@ -1,7 +1,4 @@
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE OverloadedStrings #-}
-
 module Shared.ValueObjects.PiggyId (PiggyId (..), mkPiggyId, PiggyIdError (..)) where
 
 import Control.Category ((>>>))

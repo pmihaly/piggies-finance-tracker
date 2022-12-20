@@ -1,6 +1,4 @@
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Shared.ValueObjects.Text500 (Text500 (..), Text500Error (..), mkText500) where
 

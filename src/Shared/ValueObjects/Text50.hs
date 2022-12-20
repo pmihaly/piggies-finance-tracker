@@ -1,7 +1,4 @@
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving  #-}
 
 module Shared.ValueObjects.Text50 (Text50 (..), Text50Error (..), mkText50) where
 

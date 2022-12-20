@@ -1,7 +1,4 @@
 {-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE EmptyDataDeriving #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Shared.ValueObjects.Positive (Positive (..), mkPositive, PositiveError (..)) where
 

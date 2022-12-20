@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Shared.ValueObjects.Positive
       Shared.ValueObjects.Text50
       Shared.ValueObjects.Text500
   other-modules:
@@ -63,6 +64,7 @@ test-suite piggies-finance-tracker-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Shared.ValueObjects.PositiveSpec
       Shared.ValueObjects.Text500Spec
       Shared.ValueObjects.Text50Spec
       Paths_piggies_finance_tracker

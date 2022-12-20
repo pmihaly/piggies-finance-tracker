@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Shared.ValueObjects.EventId
       Shared.ValueObjects.Id
       Shared.ValueObjects.Money
       Shared.ValueObjects.NonZero

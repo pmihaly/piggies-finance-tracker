@@ -37,26 +37,37 @@ assets: # HashMap AssetName { worthPerShare: PosNonZeroMoney }
     - worth-per-share: 1000000 # modeling fixed-income interest with asset-value-changed
 
 # shared between contexts
+applied-events: # HashSet EventId skip applying an event that is already applied here
+  - 2f43ebb8-8065-11ed-a89e-ef8a5291d1f4
+  - 2f43ec94-8065-11ed-a89f-e756d9432b63
+  - 2f43ecbc-8065-11ed-a8a0-cfdc1a601163
+
 events:
-  - type: moved-between-piggies
+  - id: c82b33a0-8064-11ed-9c08-b76ec7a93685
+    type: moved-between-piggies
     from-piggy: wise
     to-piggy: savings
     amount: 100
-  - type: taken-from-piggy
+  - id: c82b34ae-8064-11ed-9c09-9f2d8c7a16ca
+    type: taken-from-piggy
     from-piggy: savings
     amount: 200
-  - type: added-to-piggy
+  - id: c82b34d6-8064-11ed-9c0a-a7d420717463
+    type: added-to-piggy
     to-piggy: retirement
     amount: 500
-  - type: investment-started
+  - id: c82b34fe-8064-11ed-9c0b-9347140866bd
+    type: investment-started
     piggy: ib-tbsz-1
     name: BTC
     shares: 0.0123
     enriched-at: 2021-12-15T00:00:00Z
-  - type: investment-finished
+  - id: c82b351c-8064-11ed-9c0c-33b0403b5923
+    type: investment-finished
     piggy: ib-tbsz-1
     investment: BTC
     shares: 0.0012
-  - type: asset-value-changed
+  - id: c82b3544-8064-11ed-9c0d-6f64c62518a0
+    type: asset-value-changed
     name: GOOG
     percentage: 5

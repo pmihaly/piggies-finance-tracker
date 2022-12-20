@@ -3,9 +3,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Shared.ValueObjects.Text500 (Text500 (..), Text500Error (..), mkText500) where
-import Test.QuickCheck (Arbitrary (arbitrary))
 
 import Data.Text qualified as T
+import Test.QuickCheck (Arbitrary (arbitrary))
 
 newtype Text500 = UnsafeText500 {unText500 :: T.Text}
   deriving newtype (Show, Eq)

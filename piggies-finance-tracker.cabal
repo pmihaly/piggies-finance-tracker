@@ -28,6 +28,7 @@ library
       Lib
       Shared.ValueObjects.Id
       Shared.ValueObjects.NonZero
+      Shared.ValueObjects.PiggyId
       Shared.ValueObjects.Positive
       Shared.ValueObjects.Text50
       Shared.ValueObjects.Text500

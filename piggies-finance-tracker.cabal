@@ -26,11 +26,9 @@ source-repository head
 library
   exposed-modules:
       Lib
-      Shared.ValueObjects.EventId
       Shared.ValueObjects.Id
       Shared.ValueObjects.Money
       Shared.ValueObjects.NonZero
-      Shared.ValueObjects.PiggyId
       Shared.ValueObjects.Positive
       Shared.ValueObjects.Text50
       Shared.ValueObjects.Text500
@@ -105,7 +103,6 @@ test-suite piggies-finance-tracker-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Shared.ValueObjects.EventIdSpec
       Shared.ValueObjects.IdSpec
       Shared.ValueObjects.NonZeroSpec
       Shared.ValueObjects.PositiveSpec

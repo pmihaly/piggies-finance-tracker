@@ -2,11 +2,23 @@
 
 module Shared.ValueObjects.Text500 (Text500 (..), Text500Error (..), mkText500) where
 
+import Control.Category ((>>>))
+import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.Text qualified as T
 import Test.QuickCheck (Arbitrary (arbitrary))
+import Data.String (IsString)
 
 newtype Text500 = UnsafeText500 {unText500 :: T.Text}
-  deriving newtype (Show, Eq)
+  deriving newtype (Eq, ToJSON, IsString)
+
+instance FromJSON Text500 where
+  parseJSON =
+    withText "Text500" $
+      mkText500
+        >>> either (show >>> fail) pure
+
+instance Show Text500 where
+  show = unText500 >>> show
 
 instance Arbitrary Text500 where
   arbitrary = UnsafeText500 . T.pack <$> arbitrary

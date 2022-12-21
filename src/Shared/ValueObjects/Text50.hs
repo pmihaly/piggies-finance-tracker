@@ -3,11 +3,19 @@
 module Shared.ValueObjects.Text50 (Text50 (..), Text50Error (..), mkText50) where
 
 import Control.Category ((>>>))
+import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.Text qualified as T
 import Test.QuickCheck (Arbitrary (arbitrary))
+import Data.String (IsString)
 
 newtype Text50 = UnsafeText50 {unText50 :: T.Text}
-  deriving newtype (Eq)
+  deriving newtype (Eq, ToJSON, IsString)
+
+instance FromJSON Text50 where
+  parseJSON =
+    withText "Text50" $
+      mkText50
+        >>> either (show >>> fail) pure
 
 instance Show Text50 where
   show = unText50 >>> show

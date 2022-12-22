@@ -11,10 +11,13 @@ piggies-to-manage: # HashMap PiggyId PiggyDetails
 piggy-balances: # HashMap PiggyId { balance: Money } (exported constructor only allowing NonZeroMoney, but internally zero account is accepted)
   - - wise
     - balance: 1000
+      id: wise
   - - ib-tbsz-1
     - balance: 20000
+      id: ib-tbsz-1
   - - revolut
     - balance: 500
+      id: revolut
 
 # PiggyInvestments
 piggy-investments: # HashMap investmentId investment

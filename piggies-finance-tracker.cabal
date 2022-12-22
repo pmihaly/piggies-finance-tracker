@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      PiggyBalance.Entities.Piggy
       PiggyBalance.ValueObjects.Balance
       Shared.ValueObjects.Id
       Shared.ValueObjects.Money

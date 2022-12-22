@@ -6,7 +6,7 @@ import Data.Aeson (decode, encode)
 import Data.Text qualified as T
 import Data.Text.Lazy as TL
 import Data.Text.Lazy.Encoding as TL
-import Shared.ValueObjects.Text500 (Text500 (UnsafeText500, unText500), Text500Error (..), mkText500)
+import Shared.ValueObjects.Text500 (Text500 (unText500), unsafeText500, Text500Error (..), mkText500)
 import Test.Hspec
 
 spec :: Spec
@@ -23,7 +23,7 @@ spec = do
 
       it "constructs the string with medium length input" $
         do
-          mkText500 "some-text" `shouldBe` Right (UnsafeText500 "some-text")
+          mkText500 "some-text" `shouldBe` Right (unsafeText500 "some-text")
 
     describe "parseJSON" $ do
       it "returns Nothing if input is empty" $
@@ -33,14 +33,14 @@ spec = do
         do (decode ("\"" <> TL.encodeUtf8 (TL.pack $ Prelude.take 501 ['A' ..]) <> "\"") :: Maybe Text500) `shouldBe` Nothing
 
       it "constructs the string with medium length input" $
-        do (decode "\"some-text\"" :: Maybe Text500) `shouldBe` Just (UnsafeText500 "some-text")
+        do (decode "\"some-text\"" :: Maybe Text500) `shouldBe` Just (unsafeText500 "some-text")
 
   describe "elimination" $ do
     it "can be converted to T.Text using unText500" $
-      do unText500 (UnsafeText500 "some-text") `shouldBe` "some-text"
+      do unText500 (unsafeText500 "some-text") `shouldBe` "some-text"
 
     it "can be converted to String using show" $
-      do show (UnsafeText500 "some-text") `shouldBe` "\"some-text\""
+      do show (unsafeText500 "some-text") `shouldBe` "\"some-text\""
 
     it "can be converted to JSON using toJSON" $
-      do encode (UnsafeText500 "some-text") `shouldBe` "\"some-text\""
+      do encode (unsafeText500 "some-text") `shouldBe` "\"some-text\""

@@ -2,13 +2,13 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 
-module Shared.ValueObjects.NonZero (NonZero (..), mkNonZero, NonZeroError (..)) where
+module Shared.ValueObjects.NonZero (NonZero, unNonZero, unsafeNonZero, mkNonZero, NonZeroError (..)) where
 
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toBoundedInteger, toRealFloat)
 
-newtype NonZero a = UnsafeNonZero {unNonZero :: a}
+newtype NonZero a = NonZero {unNonZero :: a}
   deriving stock (Functor)
   deriving newtype (Show, Eq, Num, Fractional, ToJSON)
 
@@ -27,6 +27,9 @@ instance (RealFloat a) => FromJSON (NonZero a) where
         >>> mkNonZero
         >>> either (show >>> fail) pure
 
+unsafeNonZero :: a -> NonZero a
+unsafeNonZero = NonZero
+
 data NonZeroError
   = IllegalZero
   | IllegalFloat
@@ -34,6 +37,6 @@ data NonZeroError
 
 mkNonZero :: (Num a, Eq a) => a -> Either NonZeroError (NonZero a)
 mkNonZero x
-  | signum x == 1 = Right $ UnsafeNonZero x
-  | signum x == -1 = Right $ UnsafeNonZero x
+  | signum x == 1 = Right $ unsafeNonZero x
+  | signum x == -1 = Right $ unsafeNonZero x
   | otherwise = Left IllegalZero

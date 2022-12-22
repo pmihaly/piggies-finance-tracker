@@ -1,7 +1,7 @@
 module Shared.ValueObjects.PositiveSpec (spec) where
 
 import Data.Aeson (decode, encode)
-import Shared.ValueObjects.Positive (Positive (UnsafePositive), PositiveError (IllegalNegative), mkPositive)
+import Shared.ValueObjects.Positive (PositiveError (IllegalNegative), mkPositive, unsafePositive)
 import Shared.ValueObjects.Positive qualified as Positive
 import Test.Hspec
 import Test.QuickCheck
@@ -16,7 +16,7 @@ spec = do
 
       it "returns Positive if given positive or zero" $
         property $
-          \(x :: Int) -> x >= 0 ==> mkPositive x `shouldBe` Right (UnsafePositive x)
+          \(x :: Int) -> x >= 0 ==> mkPositive x `shouldBe` Right (unsafePositive x)
 
     describe "parseJSON" $ do
       describe "Int" $ do
@@ -24,11 +24,11 @@ spec = do
           do (decode "-123" :: Maybe (Positive.Positive Int)) `shouldBe` Nothing
 
         it "returns Positive if given positive or zero" $
-          do (decode "123" :: Maybe (Positive.Positive Int)) `shouldBe` Just (UnsafePositive 123)
+          do (decode "123" :: Maybe (Positive.Positive Int)) `shouldBe` Just (unsafePositive 123)
 
         it "returns Nothing if given float but tries to parse as int" $
           do (decode "123.45" :: Maybe (Positive.Positive Int)) `shouldBe` Nothing
 
   describe "elimination" $ do
     it "can be converted to JSON using toJSON" $
-      do encode (UnsafePositive (123 :: Int)) `shouldBe` "123"
+      do encode (unsafePositive (123 :: Int)) `shouldBe` "123"

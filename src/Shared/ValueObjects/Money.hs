@@ -1,13 +1,13 @@
 {-# LANGUAGE EmptyDataDeriving #-}
 
-module Shared.ValueObjects.Money (Money (..), MoneyError, mkMoney) where
+module Shared.ValueObjects.Money (Money, unsafeMoney, unMoney, MoneyError, mkMoney) where
 
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toRealFloat)
 import Test.QuickCheck (Arbitrary)
 
-newtype Money = UnsafeMoney {unMoney :: Double}
+newtype Money = Money {unMoney :: Double}
   deriving newtype (Eq, Num, Fractional, Arbitrary, ToJSON)
 
 instance Show Money where
@@ -20,7 +20,10 @@ instance FromJSON Money where
         >>> mkMoney
         >>> either (show >>> fail) pure
 
+unsafeMoney :: Double -> Money
+unsafeMoney = Money
+
 data MoneyError deriving (Eq, Show)
 
 mkMoney :: Double -> Either MoneyError Money
-mkMoney = UnsafeMoney >>> pure
+mkMoney = unsafeMoney >>> pure

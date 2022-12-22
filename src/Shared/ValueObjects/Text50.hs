@@ -1,13 +1,13 @@
 {-# LANGUAGE ImportQualifiedPost #-}
 
-module Shared.ValueObjects.Text50 (Text50 (..), Text50Error (..), mkText50) where
+module Shared.ValueObjects.Text50 (Text50, unsafeText50, Text50Error (..), mkText50, unText50) where
 
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.Text qualified as T
 import Test.QuickCheck (Arbitrary (arbitrary))
 
-newtype Text50 = UnsafeText50 {unText50 :: T.Text}
+newtype Text50 = Text50 {unText50 :: T.Text}
   deriving newtype (Eq, ToJSON)
 
 instance FromJSON Text50 where
@@ -20,7 +20,10 @@ instance Show Text50 where
   show = unText50 >>> show
 
 instance Arbitrary Text50 where
-  arbitrary = UnsafeText50 . T.pack <$> arbitrary
+  arbitrary = unsafeText50 . T.pack <$> arbitrary
+
+unsafeText50 :: T.Text -> Text50
+unsafeText50 = Text50
 
 data Text50Error
   = TooShort
@@ -31,4 +34,4 @@ mkText50 :: T.Text -> Either Text50Error Text50
 mkText50 x
   | x == "" = Left TooShort
   | T.length x > 50 = Left TooLong
-  | otherwise = Right $ UnsafeText50 x
+  | otherwise = Right $ unsafeText50 x

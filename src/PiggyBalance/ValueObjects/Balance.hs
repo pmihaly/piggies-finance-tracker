@@ -1,0 +1,35 @@
+module PiggyBalance.ValueObjects.Balance (Balance, unsafeBalance, unBalance, BalanceError, mkBalance) where
+
+import Control.Arrow (left)
+import Control.Category ((>>>))
+import Data.Aeson (FromJSON (..), ToJSON, withScientific)
+import Data.Scientific (toRealFloat)
+import Shared.ValueObjects.Money (Money, MoneyError, mkMoney)
+import Shared.ValueObjects.NonZero (NonZero, NonZeroError, mkNonZero, unNonZero)
+import Test.QuickCheck (Arbitrary)
+
+newtype Balance = Balance {unBalance :: Money}
+  deriving newtype (Eq, Num, Fractional, Arbitrary, ToJSON)
+
+instance Show Balance where
+  show = unBalance >>> show
+
+instance FromJSON Balance where
+  parseJSON =
+    withScientific "Balance" $
+      toRealFloat
+        >>> (mkMoney >>> left BalanceMoneyError)
+        >>> (>>= mkNonZero >>> left CreatingABalanceWithZeroMoney)
+        >>> (>>= mkBalance)
+        >>> either (show >>> fail) pure
+
+unsafeBalance :: Money -> Balance
+unsafeBalance = Balance
+
+data BalanceError where
+  CreatingABalanceWithZeroMoney :: NonZeroError -> BalanceError
+  BalanceMoneyError :: MoneyError -> BalanceError
+  deriving (Eq, Show)
+
+mkBalance :: NonZero Money -> Either BalanceError Balance
+mkBalance = unNonZero >>> unsafeBalance >>> pure

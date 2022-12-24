@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE FlexibleInstances #-}
 
@@ -10,6 +11,7 @@ import Data.Scientific (toBoundedInteger, toRealFloat)
 newtype Positive a = Positive {unPositive :: a}
   deriving stock (Functor)
   deriving newtype (Show, Eq, Num, Fractional, ToJSON)
+  deriving (RealFloat, RealFrac, Real, Floating, Ord) via a
 
 instance {-# OVERLAPPING #-} FromJSON (Positive Int) where
   parseJSON =

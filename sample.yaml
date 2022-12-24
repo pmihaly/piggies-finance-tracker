@@ -60,13 +60,13 @@ events:
     to-piggy: retirement
     amount: 500
   - id: c82b34fe-8064-11ed-9c0b-9347140866bd
-    type: investment-started
+    type: asset-bought
     piggy: ib-tbsz-1
     name: BTC
     shares: 0.0123
     enriched-at: 2021-12-15T00:00:00Z
   - id: c82b351c-8064-11ed-9c0c-33b0403b5923
-    type: investment-finished
+    type: asset-sold
     piggy: ib-tbsz-1
     investment: BTC
     shares: 0.0012

@@ -8,7 +8,7 @@ import Data.Scientific (toRealFloat)
 import Test.QuickCheck (Arbitrary)
 
 newtype Money = Money {unMoney :: Double}
-  deriving newtype (Eq, Num, Fractional, Arbitrary, ToJSON)
+  deriving newtype (Eq, Num, Fractional, RealFloat, RealFrac, Real, Floating, Ord, Arbitrary, ToJSON)
 
 instance Show Money where
   show = unMoney >>> show

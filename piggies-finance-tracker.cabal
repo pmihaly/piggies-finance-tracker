@@ -29,6 +29,7 @@ library
       Lib
       PiggyBalance.Entities.Piggy
       PiggyBalance.ValueObjects.Balance
+      Shared.Entities.Event.Event
       Shared.ValueObjects.Id
       Shared.ValueObjects.Money
       Shared.ValueObjects.NonZero

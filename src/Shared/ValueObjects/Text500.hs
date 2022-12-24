@@ -6,9 +6,10 @@ import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withText)
 import Data.Text qualified as T
 import Test.QuickCheck (Arbitrary (arbitrary))
+import Data.Hashable (Hashable)
 
 newtype Text500 = Text500 {unText500 :: T.Text}
-  deriving newtype (Eq, ToJSON)
+  deriving newtype (Eq, ToJSON, Hashable)
 
 instance FromJSON Text500 where
   parseJSON =

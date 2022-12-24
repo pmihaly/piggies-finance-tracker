@@ -26,9 +26,9 @@ instance FromJSON Balance where
 unsafeBalance :: Money -> Balance
 unsafeBalance = Balance
 
-data BalanceError where
-  CreatingABalanceWithZeroMoney :: NonZeroError -> BalanceError
-  BalanceMoneyError :: MoneyError -> BalanceError
+data BalanceError
+  = CreatingABalanceWithZeroMoney NonZeroError
+  | BalanceMoneyError MoneyError
   deriving (Eq, Show)
 
 mkBalance :: NonZero Money -> Either BalanceError Balance

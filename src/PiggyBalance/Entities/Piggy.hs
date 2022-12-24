@@ -1,9 +1,11 @@
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE EmptyDataDeriving #-}
+
 module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, balance, PiggyError, mkPiggy) where
 
 import Control.Arrow ((&&&), (***))
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withObject, (.:))
-import Data.Aeson.Key (fromString)
 import GHC.Generics (Generic)
 import PiggyBalance.ValueObjects.Balance (Balance)
 import Shared.ValueObjects.Id (Id)
@@ -29,8 +31,8 @@ instance ToJSON Piggy
 
 instance FromJSON Piggy where
   parseJSON = withObject "Piggy" $ \obj -> do
-    pId <- obj .: fromString "id"
-    pBalance <- obj .: fromString "balance"
+    pId <- obj .: "id"
+    pBalance <- obj .: "balance"
     either (show >>> fail) pure $ mkPiggy pId pBalance
 
 unsafePiggy :: Id Piggy -> Balance -> Piggy

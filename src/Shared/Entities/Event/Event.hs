@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 
-module Shared.Entities.Event.Event (Event (..), getEventId ) where
+module Shared.Entities.Event.Event (Event (..), getEventId, arbitraryEventWithPiggyIds) where
 
 import Data.Aeson (FromJSON (..), withObject, (.:))
 import Data.Aeson.Key (fromString)
@@ -11,7 +11,7 @@ import Shared.ValueObjects.Id (Id)
 import Shared.ValueObjects.Money (Money)
 import Shared.ValueObjects.NonZero qualified as NonZero
 import Shared.ValueObjects.Positive (Positive)
-import Test.QuickCheck (Arbitrary (arbitrary), Gen)
+import Test.QuickCheck (Arbitrary (arbitrary), Gen, elements)
 import Test.QuickCheck.Gen (oneof)
 
 data Event
@@ -63,38 +63,51 @@ instance FromJSON Event where
       _ -> fail "Invalid event type"
 
 instance Arbitrary Event where
-  arbitrary = oneof [arbitraryAddedToPiggy, arbitraryTakenFromPiggy, arbitraryMovedBetweenPiggies, arbitraryAssetBought, arbitraryAssetSold, arbitraryAssetValueChanged]
+  arbitrary = do
+    piggyIds <- arbitrary
+    arbitraryEventWithPiggyIds piggyIds
 
-arbitraryAddedToPiggy :: Gen Event
-arbitraryAddedToPiggy = do
+arbitraryEventWithPiggyIds :: [Id Piggy] -> Gen Event
+arbitraryEventWithPiggyIds piggyIds =
+  oneof
+    [ arbitraryAddedToPiggy piggyIds,
+      arbitraryTakenFromPiggy piggyIds,
+      arbitraryMovedBetweenPiggies piggyIds,
+      arbitraryAssetBought piggyIds,
+      arbitraryAssetSold piggyIds,
+      arbitraryAssetValueChanged
+    ]
+
+arbitraryAddedToPiggy :: [Id Piggy] -> Gen Event
+arbitraryAddedToPiggy piggyIds = do
   eId <- arbitrary
-  eToPiggy <- arbitrary
+  eToPiggy <- elements piggyIds
   AddedToPiggy eId eToPiggy <$> arbitrary
 
-arbitraryTakenFromPiggy :: Gen Event
-arbitraryTakenFromPiggy = do
+arbitraryTakenFromPiggy :: [Id Piggy] -> Gen Event
+arbitraryTakenFromPiggy piggyIds = do
   eId <- arbitrary
-  eFromPiggy <- arbitrary
+  eFromPiggy <- elements piggyIds
   TakenFromPiggy eId eFromPiggy <$> arbitrary
 
-arbitraryMovedBetweenPiggies :: Gen Event
-arbitraryMovedBetweenPiggies = do
+arbitraryMovedBetweenPiggies :: [Id Piggy] -> Gen Event
+arbitraryMovedBetweenPiggies piggyIds = do
   eId <- arbitrary
-  eFromPiggy <- arbitrary
-  eToPiggy <- arbitrary
+  eFromPiggy <- elements piggyIds
+  eToPiggy <- elements piggyIds
   MovedBetweenPiggies eId eFromPiggy eToPiggy <$> arbitrary
 
-arbitraryAssetBought :: Gen Event
-arbitraryAssetBought = do
+arbitraryAssetBought :: [Id Piggy] -> Gen Event
+arbitraryAssetBought piggyIds = do
   eId <- arbitrary
-  ePiggyId <- arbitrary
+  ePiggyId <- elements piggyIds
   eAssetId <- arbitrary
   AssetBought eId ePiggyId eAssetId <$> arbitrary
 
-arbitraryAssetSold :: Gen Event
-arbitraryAssetSold = do
+arbitraryAssetSold :: [Id Piggy] -> Gen Event
+arbitraryAssetSold piggyIds = do
   eId <- arbitrary
-  ePiggyId <- arbitrary
+  ePiggyId <- elements piggyIds
   eAssetId <- arbitrary
   AssetSold eId ePiggyId eAssetId <$> arbitrary
 

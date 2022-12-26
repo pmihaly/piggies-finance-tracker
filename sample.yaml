@@ -49,15 +49,15 @@ events:
   - id: c82b33a0-8064-11ed-9c08-b76ec7a93685
     type: moved-between-piggies
     from-piggy: wise
-    to-piggy: savings
+    to-piggy: revolut
     amount: 100
   - id: c82b34ae-8064-11ed-9c09-9f2d8c7a16ca
     type: taken-from-piggy
-    from-piggy: savings
+    from-piggy: revolut
     amount: 200
   - id: c82b34d6-8064-11ed-9c0a-a7d420717463
     type: added-to-piggy
-    to-piggy: retirement
+    to-piggy: ib-tbsz-1
     amount: 500
   - id: c82b34fe-8064-11ed-9c0b-9347140866bd
     type: asset-bought

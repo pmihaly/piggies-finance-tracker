@@ -119,6 +119,7 @@ test-suite piggies-finance-tracker-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Application.Shared.PlayEventsSpec
       Shared.ValueObjects.IdSpec
       Shared.ValueObjects.NonZeroSpec
       Shared.ValueObjects.PositiveSpec

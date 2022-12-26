@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 
-module Shared.Entities.Event.Event (Event (..)) where
+module Shared.Entities.Event.Event (Event (..), getEventId ) where
 
 import Data.Aeson (FromJSON (..), withObject, (.:))
 import Data.Aeson.Key (fromString)
@@ -11,6 +11,8 @@ import Shared.ValueObjects.Id (Id)
 import Shared.ValueObjects.Money (Money)
 import Shared.ValueObjects.NonZero qualified as NonZero
 import Shared.ValueObjects.Positive (Positive)
+import Test.QuickCheck (Arbitrary (arbitrary), Gen)
+import Test.QuickCheck.Gen (oneof)
 
 data Event
   = AddedToPiggy EventId ToPiggy (NonZero.NonZero (Positive Money))
@@ -59,6 +61,56 @@ instance FromJSON Event where
         ePercentage <- obj .: "percentage"
         pure $ AssetValueChanged eId eAssetId ePercentage
       _ -> fail "Invalid event type"
+
+instance Arbitrary Event where
+  arbitrary = oneof [arbitraryAddedToPiggy, arbitraryTakenFromPiggy, arbitraryMovedBetweenPiggies, arbitraryAssetBought, arbitraryAssetSold, arbitraryAssetValueChanged]
+
+arbitraryAddedToPiggy :: Gen Event
+arbitraryAddedToPiggy = do
+  eId <- arbitrary
+  eToPiggy <- arbitrary
+  AddedToPiggy eId eToPiggy <$> arbitrary
+
+arbitraryTakenFromPiggy :: Gen Event
+arbitraryTakenFromPiggy = do
+  eId <- arbitrary
+  eFromPiggy <- arbitrary
+  TakenFromPiggy eId eFromPiggy <$> arbitrary
+
+arbitraryMovedBetweenPiggies :: Gen Event
+arbitraryMovedBetweenPiggies = do
+  eId <- arbitrary
+  eFromPiggy <- arbitrary
+  eToPiggy <- arbitrary
+  MovedBetweenPiggies eId eFromPiggy eToPiggy <$> arbitrary
+
+arbitraryAssetBought :: Gen Event
+arbitraryAssetBought = do
+  eId <- arbitrary
+  ePiggyId <- arbitrary
+  eAssetId <- arbitrary
+  AssetBought eId ePiggyId eAssetId <$> arbitrary
+
+arbitraryAssetSold :: Gen Event
+arbitraryAssetSold = do
+  eId <- arbitrary
+  ePiggyId <- arbitrary
+  eAssetId <- arbitrary
+  AssetSold eId ePiggyId eAssetId <$> arbitrary
+
+arbitraryAssetValueChanged :: Gen Event
+arbitraryAssetValueChanged = do
+  eId <- arbitrary
+  eAssetId <- arbitrary
+  AssetValueChanged eId eAssetId <$> arbitrary
+
+getEventId :: Event -> EventId
+getEventId (AddedToPiggy eventId _ _) = eventId
+getEventId (TakenFromPiggy eventId _ _) = eventId
+getEventId (MovedBetweenPiggies eventId _ _ _) = eventId
+getEventId (AssetBought eventId _ _ _) = eventId
+getEventId (AssetSold eventId _ _ _) = eventId
+getEventId (AssetValueChanged eventId _ _) = eventId
 
 type PiggyId = Id Piggy
 

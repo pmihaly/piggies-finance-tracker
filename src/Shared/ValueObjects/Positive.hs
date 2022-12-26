@@ -1,5 +1,5 @@
-{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 
 module Shared.ValueObjects.Positive (Positive, unsafePositive, mkPositive, unPositive, PositiveError (..)) where
@@ -7,11 +7,12 @@ module Shared.ValueObjects.Positive (Positive, unsafePositive, mkPositive, unPos
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toBoundedInteger, toRealFloat)
+import Test.QuickCheck (Arbitrary)
 
 newtype Positive a = Positive {unPositive :: a}
   deriving stock (Functor)
   deriving newtype (Show, Eq, Num, Fractional, ToJSON)
-  deriving (RealFloat, RealFrac, Real, Floating, Ord) via a
+  deriving (Arbitrary, RealFloat, RealFrac, Real, Floating, Ord) via a
 
 instance {-# OVERLAPPING #-} FromJSON (Positive Int) where
   parseJSON =

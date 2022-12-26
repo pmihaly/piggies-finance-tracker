@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 
@@ -8,11 +7,12 @@ module Shared.ValueObjects.NonZero (NonZero, unNonZero, unsafeNonZero, mkNonZero
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toBoundedInteger, toRealFloat)
+import Test.QuickCheck (Arbitrary)
 
 newtype NonZero a = NonZero {unNonZero :: a}
   deriving stock (Functor)
   deriving newtype (Show, Eq, Num, Fractional, ToJSON)
-  deriving (RealFloat, RealFrac, Real, Floating, Ord) via a
+  deriving (Arbitrary, RealFloat, RealFrac, Real, Floating, Ord) via a
 
 instance {-# OVERLAPPING #-} FromJSON (NonZero Int) where
   parseJSON =

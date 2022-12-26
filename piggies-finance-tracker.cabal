@@ -26,9 +26,15 @@ source-repository head
 library
   exposed-modules:
       Application.CLI.InputFile
+      Application.Shared.ApplicationError
+      Application.Shared.PlayEvents
+      Application.Shared.State
       Lib
       PiggyBalance.Entities.Piggy
+      PiggyBalance.OnEvent
+      PiggyBalance.PiggyBalances
       PiggyBalance.ValueObjects.Balance
+      PiggyBalance.ValueObjects.PiggyBalanceError
       Shared.Entities.Event.Event
       Shared.ValueObjects.Id
       Shared.ValueObjects.Money

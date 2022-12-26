@@ -1,7 +1,8 @@
 {-# LANGUAGE ImportQualifiedPost #-}
 
-module Application.CLI.InputFile (InputFile (..)) where
+module Application.CLI.InputFile (InputFile (..), toState) where
 
+import Application.Shared.State qualified as State
 import Data.Aeson (FromJSON (..), withObject, (.!=), (.:), (.:?))
 import Data.HashMap.Strict qualified as Map
 import Data.HashSet qualified as Set
@@ -23,3 +24,6 @@ instance FromJSON InputFile where
     events <- obj .:? "events" .!= []
     appliedEvents <- obj .:? "applied-events" .!= Set.empty
     pure $ InputFile balances events appliedEvents
+
+toState :: InputFile -> State.State
+toState i = State.State (piggyBalances i) (appliedEvents i)

@@ -3,6 +3,7 @@
 
 module Application.Shared.State (State (State), appliedEvents, piggyBalances) where
 
+import Data.HashMap.Strict qualified as Map
 import Data.HashSet qualified as Set
 import Lens.Micro.Platform (makeLenses)
 import PiggyBalance.PiggyBalances (PiggyBalances)
@@ -18,7 +19,7 @@ data State = State
 
 instance Arbitrary State where
   arbitrary = do
-    piggyBalances <- arbitrary
+    piggyBalances <- Map.fromList <$> arbitrary
     appliedEvents <- Set.fromList <$> arbitrary
     pure (State piggyBalances appliedEvents)
 

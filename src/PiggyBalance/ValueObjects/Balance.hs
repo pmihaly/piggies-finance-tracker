@@ -7,10 +7,10 @@ import Data.Scientific (toRealFloat)
 import Shared.ValueObjects.Money (Money, MoneyError, mkMoney)
 import Shared.ValueObjects.NonZero (NonZero, NonZeroError, mkNonZero, unNonZero)
 import Shared.ValueObjects.Positive (Positive (unPositive))
-import Test.QuickCheck (Arbitrary)
+import Test.QuickCheck (Arbitrary (..), suchThat)
 
 newtype Balance = Balance {unBalance :: Money}
-  deriving newtype (Eq, Num, Fractional, Arbitrary, ToJSON)
+  deriving newtype (Eq, Num, Fractional, ToJSON)
 
 instance Show Balance where
   show = unBalance >>> show
@@ -23,6 +23,11 @@ instance FromJSON Balance where
         >>> (>>= mkNonZero >>> left CreatingABalanceWithZeroMoney)
         >>> (>>= mkBalance)
         >>> either (show >>> fail) pure
+
+instance Arbitrary Balance where
+  arbitrary = do
+    m <- arbitrary `suchThat` (pure >>> (/= mkMoney 0.0))
+    return $ unsafeBalance m
 
 unsafeBalance :: Money -> Balance
 unsafeBalance = Balance

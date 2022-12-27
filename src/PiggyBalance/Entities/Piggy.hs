@@ -3,9 +3,8 @@
 
 module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, piggyId, balance, PiggyError, mkPiggy, deposit) where
 
-import Control.Arrow ((&&&), (***))
 import Control.Category ((>>>))
-import Data.Aeson (FromJSON (..), ToJSON, withObject, (.:))
+import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import GHC.Generics (Generic)
 import Lens.Micro
 import Lens.Micro.Platform (makeLenses)
@@ -20,7 +19,7 @@ data Piggy = Piggy
   { _piggyId :: Id Piggy,
     _balance :: Balance
   }
-  deriving (Eq, Generic)
+  deriving (Eq, Show, Generic)
 
 makeLenses ''Piggy
 
@@ -29,13 +28,8 @@ instance Arbitrary Piggy where
     aPiggyId <- arbitrary
     Piggy aPiggyId <$> arbitrary
 
-instance Show Piggy where
-  show =
-    ((^. piggyId) &&& (^. balance))
-      >>> (show *** show)
-      >>> (\(i, b) -> "piggy with id of " <> i <> " and balance of " <> b)
-
-instance ToJSON Piggy
+instance ToJSON Piggy where
+  toJSON (Piggy pId pBalance) = object ["id" .= pId, "balance" .= pBalance]
 
 instance FromJSON Piggy where
   parseJSON = withObject "Piggy" $ \obj -> do

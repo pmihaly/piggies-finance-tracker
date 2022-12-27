@@ -8,6 +8,7 @@ import Data.Text.Lazy as TL
 import Data.Text.Lazy.Encoding as TL
 import Shared.ValueObjects.Text50 (Text50, Text50Error (..), mkText50, unText50, unsafeText50)
 import Test.Hspec
+import Test.QuickCheck
 
 spec :: Spec
 spec = do
@@ -34,6 +35,10 @@ spec = do
 
       it "constructs the string with medium length input" $
         do (decode "\"some-text\"" :: Maybe Text50) `shouldBe` Just (unsafeText50 "some-text")
+
+      it "parseJSON can parse the output of toJSON" $
+        property $
+          \t -> Just t `shouldBe` (decode (encode t) :: Maybe Text50)
 
   describe "elimination" $ do
     it "can be converted to T.Text using unText50" $

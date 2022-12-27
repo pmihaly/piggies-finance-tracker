@@ -124,6 +124,7 @@ test-suite piggies-finance-tracker-test
   main-is: Spec.hs
   other-modules:
       Application.Shared.PlayEventsSpec
+      PiggyBalance.Entities.PiggySpec
       PiggyBalance.OnEventSpec
       Shared.ValueObjects.IdSpec
       Shared.ValueObjects.NonZeroSpec

@@ -4,8 +4,9 @@ import Data.Aeson (decode, encode)
 import Data.Text.Lazy as TL
 import Data.Text.Lazy.Encoding as TL
 import Shared.ValueObjects.Id (Id, unsafeId)
-import Test.Hspec
 import Shared.ValueObjects.Text50 (unsafeText50)
+import Test.Hspec
+import Test.QuickCheck
 
 spec :: Spec
 spec = do
@@ -19,6 +20,10 @@ spec = do
 
       it "constructs the string with medium length input" $
         do (decode "\"some-text\"" :: Maybe (Id ())) `shouldBe` Just (unsafeId (unsafeText50 "some-text"))
+
+      it "parseJSON can parse the output of toJSON" $
+        property $
+          \i -> Just i `shouldBe` (decode (encode i) :: Maybe (Id ()))
 
   describe "elimination" $ do
     it "can be converted to JSON using toJSON" $

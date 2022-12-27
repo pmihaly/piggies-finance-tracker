@@ -12,11 +12,11 @@ spec = do
     describe "mkPositive" $ do
       it "returns IllegalNegative if given negative" $
         property $
-          \(x :: Int) -> x < 0 ==> mkPositive (x :: Int) `shouldBe` Left IllegalNegative
+          \(p :: Int) -> p < 0 ==> mkPositive (p :: Int) `shouldBe` Left IllegalNegative
 
       it "returns Positive if given positive or zero" $
         property $
-          \(x :: Int) -> x >= 0 ==> mkPositive x `shouldBe` Right (unsafePositive x)
+          \(p :: Int) -> p >= 0 ==> mkPositive p `shouldBe` Right (unsafePositive p)
 
     describe "parseJSON" $ do
       describe "Int" $ do
@@ -28,6 +28,10 @@ spec = do
 
         it "returns Nothing if given float but tries to parse as int" $
           do (decode "123.45" :: Maybe (Positive.Positive Int)) `shouldBe` Nothing
+
+        it "parseJSON can parse the output of toJSON" $
+          property $
+            \p -> Just p `shouldBe` (decode (encode p) :: Maybe (Positive.Positive Int))
 
   describe "elimination" $ do
     it "can be converted to JSON using toJSON" $

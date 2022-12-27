@@ -6,8 +6,9 @@ import Data.Aeson (decode, encode)
 import Data.Text qualified as T
 import Data.Text.Lazy as TL
 import Data.Text.Lazy.Encoding as TL
-import Shared.ValueObjects.Text500 (Text500 (unText500), unsafeText500, Text500Error (..), mkText500)
+import Shared.ValueObjects.Text500 (Text500 (unText500), Text500Error (..), mkText500, unsafeText500)
 import Test.Hspec
+import Test.QuickCheck
 
 spec :: Spec
 spec = do
@@ -34,6 +35,10 @@ spec = do
 
       it "constructs the string with medium length input" $
         do (decode "\"some-text\"" :: Maybe Text500) `shouldBe` Just (unsafeText500 "some-text")
+
+      it "parseJSON can parse the output of toJSON" $
+        property $
+          \t -> Just t `shouldBe` (decode (encode t) :: Maybe Text500)
 
   describe "elimination" $ do
     it "can be converted to T.Text using unText500" $

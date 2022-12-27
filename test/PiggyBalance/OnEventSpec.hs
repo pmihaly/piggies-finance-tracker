@@ -1,22 +1,17 @@
 module PiggyBalance.OnEventSpec (spec) where
 
-import Application.Shared.PlayEvents (playEvents)
-import Application.Shared.State (piggyBalances)
-import Control.Monad (replicateM)
 import Data.HashMap.Strict qualified as Map
-import Lens.Micro.Platform
 import PiggyBalance.Entities.Piggy (unsafePiggy)
 import PiggyBalance.OnEvent qualified as PiggyBalance
 import PiggyBalance.ValueObjects.Balance (unsafeBalance)
 import PiggyBalance.ValueObjects.PiggyBalanceError (PiggyBalanceError (..))
-import Shared.Entities.Event.Event (Event (..), arbitraryAddedToPiggy)
+import Shared.Entities.Event.Event (Event (..))
 import Shared.ValueObjects.Id (unsafeId)
 import Shared.ValueObjects.Money (unsafeMoney)
 import Shared.ValueObjects.NonZero (unsafeNonZero)
 import Shared.ValueObjects.Positive (unsafePositive)
 import Shared.ValueObjects.Text50 (unsafeText50)
 import Test.Hspec
-import Test.QuickCheck
 
 spec :: Spec
 spec =

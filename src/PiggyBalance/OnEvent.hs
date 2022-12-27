@@ -2,7 +2,6 @@
 
 module PiggyBalance.OnEvent (onEvent) where
 
-import Control.Category ((>>>))
 import Data.HashMap.Strict qualified as Map
 import PiggyBalance.Entities.Piggy (deposit)
 import PiggyBalance.PiggyBalances (PiggyBalances)

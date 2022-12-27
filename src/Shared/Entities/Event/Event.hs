@@ -3,15 +3,15 @@
 
 module Shared.Entities.Event.Event (Event (..), getEventId, arbitraryEventWithPiggyIds, arbitraryAddedToPiggy) where
 
-import Data.Aeson (FromJSON (..), withObject, (.:))
-import Data.Aeson.Key (fromString)
+import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
+import Data.Aeson.Key (fromString, toString)
 import GHC.Generics (Generic)
 import PiggyBalance.Entities.Piggy (Piggy)
 import Shared.ValueObjects.Id (Id)
 import Shared.ValueObjects.Money (Money)
 import Shared.ValueObjects.NonZero qualified as NonZero
 import Shared.ValueObjects.Positive (Positive)
-import Test.QuickCheck (Arbitrary (arbitrary), Gen, elements)
+import Test.QuickCheck (Arbitrary (arbitrary), Gen, elements, suchThat)
 import Test.QuickCheck.Gen (oneof)
 
 data Event
@@ -62,9 +62,23 @@ instance FromJSON Event where
         pure $ AssetValueChanged eId eAssetId ePercentage
       _ -> fail "Invalid event type"
 
+instance ToJSON Event where
+  toJSON (AddedToPiggy eId eToPiggy eAmount) =
+    object ["type" .= toString "added-to-piggy", "id" .= eId, "to-piggy" .= eToPiggy, "amount" .= eAmount]
+  toJSON (TakenFromPiggy eId eFromPiggy eAmount) =
+    object ["type" .= toString "taken-from-piggy", "id" .= eId, "from-piggy" .= eFromPiggy, "amount" .= eAmount]
+  toJSON (MovedBetweenPiggies eId eFromPiggy eToPiggy eAmount) =
+    object ["type" .= toString "moved-between-piggies", "id" .= eId, "from-piggy" .= eFromPiggy, "to-piggy" .= eToPiggy, "amount" .= eAmount]
+  toJSON (AssetBought eId ePiggyId eAssetId eShares) =
+    object ["type" .= toString "asset-bought", "id" .= eId, "piggy" .= ePiggyId, "name" .= eAssetId, "shares" .= eShares]
+  toJSON (AssetSold eId ePiggyId eAssetId eShares) =
+    object ["type" .= toString "asset-sold", "id" .= eId, "piggy" .= ePiggyId, "investment" .= eAssetId, "shares" .= eShares]
+  toJSON (AssetValueChanged eId eAssetId ePercentage) =
+    object ["type" .= toString "asset-value-changed", "id" .= eId, "name" .= eAssetId, "percentage" .= ePercentage]
+
 instance Arbitrary Event where
   arbitrary = do
-    piggyIds <- arbitrary
+    piggyIds <- arbitrary `suchThat` (/= [])
     arbitraryEventWithPiggyIds piggyIds
 
 arbitraryEventWithPiggyIds :: [Id Piggy] -> Gen Event

@@ -11,7 +11,7 @@ import Lens.Micro.Platform (makeLenses)
 import PiggyBalance.PiggyBalances (PiggyBalances)
 import Shared.Entities.Event.Event (Event)
 import Shared.ValueObjects.Id (Id)
-import Test.QuickCheck (Arbitrary (arbitrary))
+import Test.QuickCheck (Arbitrary (arbitrary), suchThat)
 
 data State = State
   { _piggyBalances :: PiggyBalances,
@@ -23,7 +23,7 @@ instance ToJSON State
 
 instance Arbitrary State where
   arbitrary = do
-    piggyBalances <- Map.fromList <$> arbitrary
+    piggyBalances <- Map.fromList <$> arbitrary `suchThat` (/= [])
     appliedEvents <- Set.fromList <$> arbitrary
     pure (State piggyBalances appliedEvents)
 

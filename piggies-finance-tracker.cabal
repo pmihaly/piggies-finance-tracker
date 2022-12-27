@@ -25,7 +25,7 @@ source-repository head
 
 library
   exposed-modules:
-      Application.CLI.InputFile
+      Application.CLI.InputOutputFile
       Application.Shared.ApplicationError
       Application.Shared.PlayEvents
       Application.Shared.State
@@ -123,6 +123,7 @@ test-suite piggies-finance-tracker-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Application.CLI.InputOutputFileSpec
       Application.Shared.PlayEventsSpec
       PiggyBalance.Entities.PiggySpec
       PiggyBalance.OnEventSpec

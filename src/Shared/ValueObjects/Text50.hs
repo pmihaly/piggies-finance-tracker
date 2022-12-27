@@ -4,9 +4,9 @@ module Shared.ValueObjects.Text50 (Text50, unsafeText50, Text50Error (..), mkTex
 
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withText)
-import Data.Text qualified as T
-import Test.QuickCheck (Arbitrary (arbitrary))
 import Data.Hashable (Hashable)
+import Data.Text qualified as T
+import Test.QuickCheck (Arbitrary (arbitrary), suchThat)
 
 newtype Text50 = Text50 {unText50 :: T.Text}
   deriving newtype (Eq, ToJSON, Hashable)
@@ -21,7 +21,9 @@ instance Show Text50 where
   show = unText50 >>> show
 
 instance Arbitrary Text50 where
-  arbitrary = unsafeText50 . T.pack <$> arbitrary
+  arbitrary = do
+    str <- T.pack <$> arbitrary `suchThat` (not . null)
+    return $ unsafeText50 $ T.take 50 str
 
 unsafeText50 :: T.Text -> Text50
 unsafeText50 = Text50

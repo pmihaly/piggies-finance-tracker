@@ -7,12 +7,12 @@ module Shared.ValueObjects.NonZero (NonZero, unNonZero, unsafeNonZero, mkNonZero
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toBoundedInteger, toRealFloat)
-import Test.QuickCheck (Arbitrary)
+import Test.QuickCheck (Arbitrary (..), suchThat)
 
 newtype NonZero a = NonZero {unNonZero :: a}
   deriving stock (Functor)
   deriving newtype (Show, Eq, Num, Fractional, ToJSON)
-  deriving (Arbitrary, RealFloat, RealFrac, Real, Floating, Ord) via a
+  deriving (RealFloat, RealFrac, Real, Floating, Ord) via a
 
 instance {-# OVERLAPPING #-} FromJSON (NonZero Int) where
   parseJSON =
@@ -28,6 +28,11 @@ instance (RealFloat a) => FromJSON (NonZero a) where
       toRealFloat
         >>> mkNonZero
         >>> either (show >>> fail) pure
+
+instance (Arbitrary a, Num a, Eq a) => Arbitrary (NonZero a) where
+  arbitrary = do
+    num <- arbitrary `suchThat` (\x -> signum x /= 0)
+    return $ unsafeNonZero num
 
 unsafeNonZero :: a -> NonZero a
 unsafeNonZero = NonZero

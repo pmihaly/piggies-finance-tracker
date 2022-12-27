@@ -7,12 +7,12 @@ module Shared.ValueObjects.Positive (Positive, unsafePositive, mkPositive, unPos
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toBoundedInteger, toRealFloat)
-import Test.QuickCheck (Arbitrary)
+import Test.QuickCheck (Arbitrary (..), suchThat)
 
 newtype Positive a = Positive {unPositive :: a}
   deriving stock (Functor)
   deriving newtype (Show, Eq, Num, Fractional, ToJSON)
-  deriving (Arbitrary, RealFloat, RealFrac, Real, Floating, Ord) via a
+  deriving (RealFloat, RealFrac, Real, Floating, Ord) via a
 
 instance {-# OVERLAPPING #-} FromJSON (Positive Int) where
   parseJSON =
@@ -28,6 +28,11 @@ instance (RealFloat a) => FromJSON (Positive a) where
       toRealFloat
         >>> mkPositive
         >>> either (show >>> fail) pure
+
+instance (Arbitrary a, Num a, Eq a) => Arbitrary (Positive a) where
+  arbitrary = do
+    num <- arbitrary `suchThat` (\x -> signum x /= -1)
+    return $ unsafePositive num
 
 unsafePositive :: a -> Positive a
 unsafePositive = Positive

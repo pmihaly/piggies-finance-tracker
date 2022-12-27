@@ -15,10 +15,13 @@ playEvents :: State -> [Event] -> Either ApplicationError State
 playEvents =
   foldM
     ( \state event -> do
-        if Set.member (getEventId event) (state ^. appliedEvents)
-          then pure state
-          else do
-            let newState = state & appliedEvents %~ Set.insert (getEventId event)
-            newPiggyBalances <- left PiggyBalanceError $ PiggyBalance.onEvent (newState ^. piggyBalances) event
-            pure $ newState & piggyBalances .~ newPiggyBalances
+        let newState = state & appliedEvents %~ Set.insert (getEventId event)
+        newPiggyBalances <- left PiggyBalanceError $ PiggyBalance.onEvent (newState ^. piggyBalances) event
+        ifNotApplied state event $ pure $ newState & piggyBalances .~ newPiggyBalances
     )
+
+ifNotApplied :: State -> Event -> Either ApplicationError State -> Either ApplicationError State
+ifNotApplied state event newState =
+  if Set.member (getEventId event) (state ^. appliedEvents)
+    then pure state
+    else newState

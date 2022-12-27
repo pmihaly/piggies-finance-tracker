@@ -1,12 +1,14 @@
 {-# LANGUAGE EmptyDataDeriving #-}
-{-# LANGUAGE GADTs #-}
+{-# LANGUAGE TemplateHaskell #-}
 
-module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, balance, PiggyError, mkPiggy, deposit) where
+module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, piggyId, balance, PiggyError, mkPiggy, deposit) where
 
 import Control.Arrow ((&&&), (***))
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withObject, (.:))
 import GHC.Generics (Generic)
+import Lens.Micro
+import Lens.Micro.Platform (makeLenses)
 import PiggyBalance.ValueObjects.Balance (Balance, addMoney)
 import Shared.ValueObjects.Id (Id)
 import Shared.ValueObjects.Money (Money)
@@ -14,19 +16,22 @@ import Shared.ValueObjects.NonZero (NonZero)
 import Shared.ValueObjects.Positive (Positive)
 import Test.QuickCheck (Arbitrary (arbitrary))
 
-data Piggy where
-  Piggy :: {balanceId :: Id Piggy, balance :: Balance} -> Piggy
+data Piggy = Piggy
+  { _piggyId :: Id Piggy,
+    _balance :: Balance
+  }
   deriving (Eq, Generic)
+
+makeLenses ''Piggy
 
 instance Arbitrary Piggy where
   arbitrary = do
-    balanceId <- arbitrary
-    balance <- arbitrary
-    return Piggy {balanceId = balanceId, balance = balance}
+    aPiggyId <- arbitrary
+    Piggy aPiggyId <$> arbitrary
 
 instance Show Piggy where
   show =
-    (balanceId &&& balance)
+    ((^. piggyId) &&& (^. balance))
       >>> (show *** show)
       >>> (\(i, b) -> "piggy with id of " <> i <> " and balance of " <> b)
 
@@ -44,7 +49,7 @@ unsafePiggy = Piggy
 data PiggyError deriving (Eq, Show)
 
 mkPiggy :: Id Piggy -> Balance -> Either PiggyError Piggy
-mkPiggy pBalanceId pBalance = pure $ unsafePiggy pBalanceId pBalance
+mkPiggy pId pBalance = pure $ unsafePiggy pId pBalance
 
 deposit :: NonZero (Positive Money) -> Piggy -> Piggy
-deposit amount piggy = unsafePiggy (balanceId piggy) (addMoney amount (balance piggy))
+deposit amount piggy = piggy & balance %~ addMoney amount

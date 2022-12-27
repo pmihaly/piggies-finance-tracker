@@ -1,5 +1,10 @@
 {-# LANGUAGE EmptyDataDeriving #-}
 
-module PiggyBalance.ValueObjects.PiggyBalanceError (PiggyBalanceError) where
+module PiggyBalance.ValueObjects.PiggyBalanceError (PiggyBalanceError(..)) where
 
-data PiggyBalanceError deriving (Show, Eq)
+import PiggyBalance.Entities.Piggy (Piggy)
+import Shared.ValueObjects.Id (Id)
+
+newtype PiggyBalanceError
+  = PiggyNotFound (Id Piggy)
+  deriving (Show, Eq)

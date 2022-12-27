@@ -1,14 +1,17 @@
-{-# LANGUAGE GADTs #-}
 {-# LANGUAGE EmptyDataDeriving #-}
+{-# LANGUAGE GADTs #-}
 
-module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, balance, PiggyError, mkPiggy) where
+module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, balance, PiggyError, mkPiggy, deposit) where
 
 import Control.Arrow ((&&&), (***))
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withObject, (.:))
 import GHC.Generics (Generic)
-import PiggyBalance.ValueObjects.Balance (Balance)
+import PiggyBalance.ValueObjects.Balance (Balance, addMoney)
 import Shared.ValueObjects.Id (Id)
+import Shared.ValueObjects.Money (Money)
+import Shared.ValueObjects.NonZero (NonZero)
+import Shared.ValueObjects.Positive (Positive)
 import Test.QuickCheck (Arbitrary (arbitrary))
 
 data Piggy where
@@ -42,3 +45,6 @@ data PiggyError deriving (Eq, Show)
 
 mkPiggy :: Id Piggy -> Balance -> Either PiggyError Piggy
 mkPiggy pBalanceId pBalance = pure $ unsafePiggy pBalanceId pBalance
+
+deposit :: NonZero (Positive Money) -> Piggy -> Piggy
+deposit amount piggy = unsafePiggy (balanceId piggy) (addMoney amount (balance piggy))

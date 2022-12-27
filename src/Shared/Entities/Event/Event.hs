@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 
-module Shared.Entities.Event.Event (Event (..), getEventId, arbitraryEventWithPiggyIds) where
+module Shared.Entities.Event.Event (Event (..), getEventId, arbitraryEventWithPiggyIds, arbitraryAddedToPiggy) where
 
 import Data.Aeson (FromJSON (..), withObject, (.:))
 import Data.Aeson.Key (fromString)

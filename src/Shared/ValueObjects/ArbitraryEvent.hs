@@ -49,10 +49,15 @@ arbitraryTakenFromPiggy s = do
 
 arbitraryMovedBetweenPiggies :: State -> Gen Event
 arbitraryMovedBetweenPiggies s = do
+  fromPiggy <- elements (Map.elems $ s ^. piggyBalances)
+  toPiggy <- elements (Map.elems $ s ^. piggyBalances)
+
   eId <- arbitrary
-  eFromPiggy <- (^. piggyId) <$> elements (Map.elems $ s ^. piggyBalances)
-  eToPiggy <- (^. piggyId) <$> elements (Map.elems $ s ^. piggyBalances)
-  MovedBetweenPiggies eId eFromPiggy eToPiggy <$> arbitrary
+  let eFromPiggyId = fromPiggy ^. piggyId
+  let eToPiggyId = toPiggy ^. piggyId
+  eAmount <- arbitraryAvailableMoney $ fromPiggy ^. balance
+
+  pure $ MovedBetweenPiggies eId eFromPiggyId eToPiggyId eAmount
 
 arbitraryAssetBought :: State -> Gen Event
 arbitraryAssetBought s = do

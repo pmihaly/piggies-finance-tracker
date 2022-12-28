@@ -16,7 +16,7 @@ import Shared.ValueObjects.Positive (Positive)
 data Event
   = AddedToPiggy EventId ToPiggy (NonZero.NonZero (Positive Money))
   | TakenFromPiggy EventId FromPiggy (Available (NonZero.NonZero (Positive Money)))
-  | MovedBetweenPiggies EventId FromPiggy ToPiggy (NonZero.NonZero (Positive Money))
+  | MovedBetweenPiggies EventId FromPiggy ToPiggy (Available (NonZero.NonZero (Positive Money)))
   | AssetBought EventId PiggyId AssetId Shares
   | AssetSold EventId PiggyId AssetId Shares
   | AssetValueChanged EventId AssetId Percentage

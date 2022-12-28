@@ -8,7 +8,7 @@ import Data.HashMap.Strict qualified as Map
 import Lens.Micro
 import PiggyBalance.Entities.Piggy (balance, piggyId)
 import Shared.Entities.Event.Event (Event (..))
-import Shared.ValueObjects.Available (arbitraryAvailableMoney)
+import Shared.ValueObjects.MaybeNotAvailable (arbitraryMaybeNotAvailableMoney)
 import Test.QuickCheck (Arbitrary (arbitrary), Gen, elements)
 import Test.QuickCheck.Gen (oneof)
 
@@ -43,7 +43,7 @@ arbitraryTakenFromPiggy s = do
 
   eId <- arbitrary
   let eFromPiggyId = fromPiggy ^. piggyId
-  eAmount <- arbitraryAvailableMoney $ fromPiggy ^. balance
+  eAmount <- arbitraryMaybeNotAvailableMoney $ fromPiggy ^. balance
 
   pure $ TakenFromPiggy eId eFromPiggyId eAmount
 
@@ -55,7 +55,7 @@ arbitraryMovedBetweenPiggies s = do
   eId <- arbitrary
   let eFromPiggyId = fromPiggy ^. piggyId
   let eToPiggyId = toPiggy ^. piggyId
-  eAmount <- arbitraryAvailableMoney $ fromPiggy ^. balance
+  eAmount <- arbitraryMaybeNotAvailableMoney $ fromPiggy ^. balance
 
   pure $ MovedBetweenPiggies eId eFromPiggyId eToPiggyId eAmount
 

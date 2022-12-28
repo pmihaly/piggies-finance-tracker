@@ -37,8 +37,8 @@ library
       PiggyBalance.ValueObjects.PiggyBalanceError
       Shared.Entities.Event.Event
       Shared.ValueObjects.ArbitraryEvent
-      Shared.ValueObjects.Available
       Shared.ValueObjects.Id
+      Shared.ValueObjects.MaybeNotAvailable
       Shared.ValueObjects.Money
       Shared.ValueObjects.NonZero
       Shared.ValueObjects.Positive
@@ -130,8 +130,8 @@ test-suite piggies-finance-tracker-test
       PiggyBalance.Entities.PiggySpec
       PiggyBalance.OnEventSpec
       Shared.Entities.EventSpec
-      Shared.ValueObjects.AvailableSpec
       Shared.ValueObjects.IdSpec
+      Shared.ValueObjects.MaybeNotAvailableSpec
       Shared.ValueObjects.NonZeroSpec
       Shared.ValueObjects.PositiveSpec
       Shared.ValueObjects.Text500Spec

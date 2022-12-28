@@ -7,16 +7,16 @@ import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import Data.Aeson.Key (fromString, toString)
 import GHC.Generics (Generic)
 import PiggyBalance.Entities.Piggy (Piggy)
-import Shared.ValueObjects.Available (Available)
 import Shared.ValueObjects.Id (Id)
+import Shared.ValueObjects.MaybeNotAvailable (MaybeNotAvailable)
 import Shared.ValueObjects.Money (Money)
 import Shared.ValueObjects.NonZero qualified as NonZero
 import Shared.ValueObjects.Positive (Positive)
 
 data Event
   = AddedToPiggy EventId ToPiggy (NonZero.NonZero (Positive Money))
-  | TakenFromPiggy EventId FromPiggy (Available (NonZero.NonZero (Positive Money)))
-  | MovedBetweenPiggies EventId FromPiggy ToPiggy (Available (NonZero.NonZero (Positive Money)))
+  | TakenFromPiggy EventId FromPiggy (MaybeNotAvailable (NonZero.NonZero (Positive Money)))
+  | MovedBetweenPiggies EventId FromPiggy ToPiggy (MaybeNotAvailable (NonZero.NonZero (Positive Money)))
   | AssetBought EventId PiggyId AssetId Shares
   | AssetSold EventId PiggyId AssetId Shares
   | AssetValueChanged EventId AssetId Percentage

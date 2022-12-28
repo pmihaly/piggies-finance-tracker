@@ -36,6 +36,7 @@ library
       PiggyBalance.ValueObjects.Balance
       PiggyBalance.ValueObjects.PiggyBalanceError
       Shared.Entities.Event.Event
+      Shared.ValueObjects.ArbitraryEvent
       Shared.ValueObjects.Available
       Shared.ValueObjects.Id
       Shared.ValueObjects.Money

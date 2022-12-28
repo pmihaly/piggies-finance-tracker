@@ -1,22 +1,21 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE ImportQualifiedPost #-}
 
-module Shared.Entities.Event.Event (Event (..), getEventId, arbitraryEventWithPiggyIds, arbitraryAddedToPiggy) where
+module Shared.Entities.Event.Event (Event (..), getEventId) where
 
 import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import Data.Aeson.Key (fromString, toString)
 import GHC.Generics (Generic)
 import PiggyBalance.Entities.Piggy (Piggy)
+import Shared.ValueObjects.Available (Available)
 import Shared.ValueObjects.Id (Id)
 import Shared.ValueObjects.Money (Money)
 import Shared.ValueObjects.NonZero qualified as NonZero
 import Shared.ValueObjects.Positive (Positive)
-import Test.QuickCheck (Arbitrary (arbitrary), Gen, elements, suchThat)
-import Test.QuickCheck.Gen (oneof)
 
 data Event
   = AddedToPiggy EventId ToPiggy (NonZero.NonZero (Positive Money))
-  | TakenFromPiggy EventId FromPiggy (NonZero.NonZero (Positive Money))
+  | TakenFromPiggy EventId FromPiggy (Available (NonZero.NonZero (Positive Money)))
   | MovedBetweenPiggies EventId FromPiggy ToPiggy (NonZero.NonZero (Positive Money))
   | AssetBought EventId PiggyId AssetId Shares
   | AssetSold EventId PiggyId AssetId Shares
@@ -75,61 +74,6 @@ instance ToJSON Event where
     object ["type" .= toString "asset-sold", "id" .= eId, "piggy" .= ePiggyId, "investment" .= eAssetId, "shares" .= eShares]
   toJSON (AssetValueChanged eId eAssetId ePercentage) =
     object ["type" .= toString "asset-value-changed", "id" .= eId, "name" .= eAssetId, "percentage" .= ePercentage]
-
-instance Arbitrary Event where
-  arbitrary = do
-    piggyIds <- arbitrary `suchThat` (/= [])
-    arbitraryEventWithPiggyIds piggyIds
-
-arbitraryEventWithPiggyIds :: [Id Piggy] -> Gen Event
-arbitraryEventWithPiggyIds piggyIds =
-  oneof
-    [ arbitraryAddedToPiggy piggyIds,
-      arbitraryTakenFromPiggy piggyIds,
-      arbitraryMovedBetweenPiggies piggyIds,
-      arbitraryAssetBought piggyIds,
-      arbitraryAssetSold piggyIds,
-      arbitraryAssetValueChanged
-    ]
-
-arbitraryAddedToPiggy :: [Id Piggy] -> Gen Event
-arbitraryAddedToPiggy piggyIds = do
-  eId <- arbitrary
-  eToPiggy <- elements piggyIds
-  AddedToPiggy eId eToPiggy <$> arbitrary
-
-arbitraryTakenFromPiggy :: [Id Piggy] -> Gen Event
-arbitraryTakenFromPiggy piggyIds = do
-  eId <- arbitrary
-  eFromPiggy <- elements piggyIds
-  TakenFromPiggy eId eFromPiggy <$> arbitrary
-
-arbitraryMovedBetweenPiggies :: [Id Piggy] -> Gen Event
-arbitraryMovedBetweenPiggies piggyIds = do
-  eId <- arbitrary
-  eFromPiggy <- elements piggyIds
-  eToPiggy <- elements piggyIds
-  MovedBetweenPiggies eId eFromPiggy eToPiggy <$> arbitrary
-
-arbitraryAssetBought :: [Id Piggy] -> Gen Event
-arbitraryAssetBought piggyIds = do
-  eId <- arbitrary
-  ePiggyId <- elements piggyIds
-  eAssetId <- arbitrary
-  AssetBought eId ePiggyId eAssetId <$> arbitrary
-
-arbitraryAssetSold :: [Id Piggy] -> Gen Event
-arbitraryAssetSold piggyIds = do
-  eId <- arbitrary
-  ePiggyId <- elements piggyIds
-  eAssetId <- arbitrary
-  AssetSold eId ePiggyId eAssetId <$> arbitrary
-
-arbitraryAssetValueChanged :: Gen Event
-arbitraryAssetValueChanged = do
-  eId <- arbitrary
-  eAssetId <- arbitrary
-  AssetValueChanged eId eAssetId <$> arbitrary
 
 getEventId :: Event -> EventId
 getEventId (AddedToPiggy eventId _ _) = eventId

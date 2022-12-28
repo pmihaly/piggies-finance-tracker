@@ -1,9 +1,9 @@
 module Application.CLI.InputOutputFileSpec (spec) where
 
+import Application.CLI.InputOutputFile (InputOutputFile)
 import Data.Aeson (decode, encode)
 import Test.Hspec
 import Test.QuickCheck
-import Application.CLI.InputOutputFile (InputOutputFile)
 
 spec :: Spec
 spec = do

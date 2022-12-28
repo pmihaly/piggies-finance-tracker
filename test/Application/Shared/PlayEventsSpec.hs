@@ -8,8 +8,8 @@ import Control.Category ((>>>))
 import Data.HashMap.Strict qualified as Map
 import Data.HashSet qualified as Set
 import Lens.Micro.Platform
-import PiggyBalance.PiggyBalances (getOneId)
-import Shared.Entities.Event.Event (arbitraryEventWithPiggyIds, getEventId)
+import Shared.ValueObjects.ArbitraryEvent (arbitraryEventFromState)
+import Shared.Entities.Event.Event (getEventId)
 import Test.Hspec
 import Test.QuickCheck
 
@@ -19,7 +19,7 @@ spec = do
     property $
       \state ->
         not (Map.null $ state ^. piggyBalances)
-          ==> forAll (arbitraryEventWithPiggyIds [getOneId $ state ^. piggyBalances])
+          ==> forAll (arbitraryEventFromState state)
           $ \event -> do
             ((^. appliedEvents) >>> Set.member (getEventId event)) <$> playEvents state [event] `shouldBe` pure True
 
@@ -28,5 +28,5 @@ spec = do
       property $
         \state ->
           not (Map.null $ state ^. piggyBalances)
-            ==> forAll (arbitraryEventWithPiggyIds [getOneId $ state ^. piggyBalances])
+            ==> forAll (arbitraryEventFromState state)
             $ \event -> playEvents state [event] `shouldBe` playEvents state [event, event]

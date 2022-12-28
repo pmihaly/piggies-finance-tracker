@@ -4,7 +4,7 @@ import Control.Arrow (left)
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON, withScientific)
 import Data.Scientific (toRealFloat)
-import Shared.ValueObjects.Money (Money, MoneyError, mkMoney)
+import Shared.ValueObjects.Money (Money (unMoney), MoneyError, mkMoney)
 import Shared.ValueObjects.NonZero (NonZero, NonZeroError, mkNonZero, unNonZero)
 import Shared.ValueObjects.Positive (Positive (unPositive))
 import Test.QuickCheck (Arbitrary (..), suchThat)
@@ -26,7 +26,7 @@ instance FromJSON Balance where
 
 instance Arbitrary Balance where
   arbitrary = do
-    m <- arbitrary `suchThat` (pure >>> (/= mkMoney 0.0))
+    m <- arbitrary `suchThat` (unMoney >>> (> 0.0))
     return $ unsafeBalance m
 
 unsafeBalance :: Money -> Balance

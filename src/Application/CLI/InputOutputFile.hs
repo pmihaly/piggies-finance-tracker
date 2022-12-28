@@ -8,6 +8,7 @@ import Data.HashSet qualified as Set
 import GHC.Generics (Generic)
 import Lens.Micro
 import PiggyBalance.PiggyBalances (PiggyBalances)
+import Shared.ValueObjects.ArbitraryEvent (ArbitraryEvent (..))
 import Shared.Entities.Event.Event (Event)
 import Shared.ValueObjects.Id (Id)
 import Test.QuickCheck (Arbitrary (..))
@@ -36,7 +37,7 @@ instance ToJSON InputOutputFile where
 
 instance Arbitrary InputOutputFile where
   arbitrary = do
-    events <- arbitrary
+    events <- fmap unArbitraryEvent <$> arbitrary
     fromStateWithEvents events <$> arbitrary
 
 toState :: InputOutputFile -> State.State

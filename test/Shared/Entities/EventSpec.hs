@@ -13,6 +13,6 @@ spec = do
       describe "parseJSON" $ do
         it "parseJSON can parse the output of toJSON" $
           property $
-            \(ae :: ArbitraryEvent) -> 
-                let e = unArbitraryEvent ae in
-              (decode (encode e) :: Maybe Event) `shouldBe` Just e
+            \(ae :: ArbitraryEvent) ->
+              let e = unArbitraryEvent ae
+               in (decode (encode e) :: Maybe Event) `shouldBe` Just e

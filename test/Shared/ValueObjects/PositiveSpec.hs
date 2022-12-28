@@ -1,3 +1,4 @@
+{-# LANGUAGE ImportQualifiedPost #-}
 module Shared.ValueObjects.PositiveSpec (spec) where
 
 import Data.Aeson (decode, encode)

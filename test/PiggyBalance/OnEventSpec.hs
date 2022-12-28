@@ -1,3 +1,5 @@
+{-# LANGUAGE ImportQualifiedPost #-}
+
 module PiggyBalance.OnEventSpec (spec) where
 
 import Data.HashMap.Strict qualified as Map

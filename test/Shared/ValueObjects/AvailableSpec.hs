@@ -1,7 +1,7 @@
 module Shared.ValueObjects.AvailableSpec (spec) where
 
-import Shared.ValueObjects.Available (AvailableError (..), mkAvailableMoney, unsafeAvailable)
 import PiggyBalance.ValueObjects.Balance (unsafeBalance)
+import Shared.ValueObjects.Available (AvailableError (..), mkAvailableMoney, unsafeAvailable)
 import Shared.ValueObjects.Money (unsafeMoney)
 import Shared.ValueObjects.NonZero (unNonZero, unsafeNonZero)
 import Shared.ValueObjects.Positive (unPositive, unsafePositive)

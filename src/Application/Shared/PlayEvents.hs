@@ -14,14 +14,14 @@ import Shared.Entities.Event.Event (Event, getEventId)
 playEvents :: State -> [Event] -> Either ApplicationError State
 playEvents =
   foldM
-    ( \state event -> do
+    ( \state event -> ifNotAlreadyApplied state event $ do
         let newState = state & appliedEvents %~ Set.insert (getEventId event)
         newPiggyBalances <- left PiggyBalanceError $ PiggyBalance.onEvent (newState ^. piggyBalances) event
-        ifNotApplied state event $ pure $ newState & piggyBalances .~ newPiggyBalances
+        pure $ newState & piggyBalances .~ newPiggyBalances
     )
 
-ifNotApplied :: State -> Event -> Either ApplicationError State -> Either ApplicationError State
-ifNotApplied state event newState =
+ifNotAlreadyApplied :: State -> Event -> Either ApplicationError State -> Either ApplicationError State
+ifNotAlreadyApplied state event newState =
   if Set.member (getEventId event) (state ^. appliedEvents)
     then pure state
     else newState

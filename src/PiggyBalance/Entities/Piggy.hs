@@ -1,15 +1,17 @@
 {-# LANGUAGE EmptyDataDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, piggyId, balance, PiggyError, mkPiggy, deposit) where
+module PiggyBalance.Entities.Piggy (Piggy, unsafePiggy, piggyId, balance, PiggyError (..), mkPiggy, deposit, withdraw) where
 
+import Control.Arrow (left)
 import Control.Category ((>>>))
 import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import GHC.Generics (Generic)
 import Lens.Micro
 import Lens.Micro.Platform (makeLenses)
-import PiggyBalance.ValueObjects.Balance (Balance, addMoney)
+import PiggyBalance.ValueObjects.Balance (Balance, addMoney, subtractMoney)
 import Shared.ValueObjects.Id (Id)
+import Shared.ValueObjects.MaybeNotAvailable (MaybeNotAvailable, MaybeNotAvailableError, unmkMaybeNotAvailableMoney)
 import Shared.ValueObjects.Money (Money)
 import Shared.ValueObjects.NonZero (NonZero)
 import Shared.ValueObjects.Positive (Positive)
@@ -40,10 +42,17 @@ instance FromJSON Piggy where
 unsafePiggy :: Id Piggy -> Balance -> Piggy
 unsafePiggy = Piggy
 
-data PiggyError deriving (Eq, Show)
+newtype PiggyError
+  = InsufficientFunds MaybeNotAvailableError
+  deriving (Eq, Show)
 
 mkPiggy :: Id Piggy -> Balance -> Either PiggyError Piggy
 mkPiggy pId pBalance = pure $ unsafePiggy pId pBalance
 
 deposit :: NonZero (Positive Money) -> Piggy -> Piggy
 deposit amount piggy = piggy & balance %~ addMoney amount
+
+withdraw :: MaybeNotAvailable (NonZero (Positive Money)) -> Piggy -> Either PiggyError Piggy
+withdraw mnaAmount piggy = do
+  amount <- left InsufficientFunds $ unmkMaybeNotAvailableMoney mnaAmount $ piggy ^. balance
+  pure $ piggy & balance %~ subtractMoney amount

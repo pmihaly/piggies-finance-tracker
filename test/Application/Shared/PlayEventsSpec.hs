@@ -3,7 +3,7 @@
 module Application.Shared.PlayEventsSpec (spec) where
 
 import Application.Shared.PlayEvents (playEvents)
-import Application.Shared.State (appliedEvents, piggyBalances)
+import Application.Shared.State (appliedEvents)
 import Control.Category ((>>>))
 import Data.HashSet qualified as Set
 import Lens.Micro.Platform

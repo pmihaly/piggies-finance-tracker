@@ -1,4 +1,4 @@
-module PiggyBalance.ValueObjects.Balance (Balance, unsafeBalance, unBalance, BalanceError, mkBalance, addMoney) where
+module PiggyBalance.ValueObjects.Balance (Balance, unsafeBalance, unBalance, BalanceError, mkBalance, addMoney, subtractMoney) where
 
 import Control.Arrow (left)
 import Control.Category ((>>>))
@@ -42,3 +42,6 @@ mkBalance = unNonZero >>> unsafeBalance >>> pure
 
 addMoney :: NonZero (Positive Money) -> Balance -> Balance
 addMoney amount balance = unsafeBalance (unPositive (unNonZero amount) + unBalance balance)
+
+subtractMoney :: NonZero (Positive Money) -> Balance -> Balance
+subtractMoney amount balance = unsafeBalance (unBalance balance - unPositive (unNonZero amount))

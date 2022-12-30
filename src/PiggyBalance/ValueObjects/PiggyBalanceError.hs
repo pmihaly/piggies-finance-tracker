@@ -2,9 +2,10 @@
 
 module PiggyBalance.ValueObjects.PiggyBalanceError (PiggyBalanceError(..)) where
 
-import PiggyBalance.Entities.Piggy (Piggy)
+import PiggyBalance.Entities.Piggy (Piggy, PiggyError)
 import Shared.ValueObjects.Id (Id)
 
-newtype PiggyBalanceError
+data PiggyBalanceError
   = PiggyNotFound (Id Piggy)
+  | PiggyHasNotEnoughMoney PiggyError
   deriving (Show, Eq)

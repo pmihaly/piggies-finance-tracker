@@ -25,12 +25,12 @@ piggy-investments: # HashMap investmentId investment
     - asset: WVCE
       piggy: ib-tbsz-1
       shares: 138 # NonZeroDouble
-      enriched-at: 2022-12-14T00:00:00Z
+      investment-started-at: 2022-12-14T00:00:00Z
   - - investment-hY63Efn3342ar1MVdYwfm
     - asset: PMAP-2029/J-1M
       piggy: ib-tbsz-1
       shares: 1
-      enriched-at: 2022-12-14T00:00:00Z
+      investment-started-at: 2022-12-14T00:00:00Z
       maturity: 2023-12-14T00:00:00Z
 
 assets: # HashMap AssetName { worthPerShare: PosNonZeroMoney }
@@ -64,7 +64,7 @@ events:
     piggy: ib-tbsz-1
     name: BTC
     shares: 0.0123
-    enriched-at: 2021-12-15T00:00:00Z
+    investment-started-at: 2021-12-15T00:00:00Z
   - id: c82b351c-8064-11ed-9c0c-33b0403b5923
     type: asset-sold
     piggy: ib-tbsz-1

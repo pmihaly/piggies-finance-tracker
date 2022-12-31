@@ -16,8 +16,14 @@ onEvent balances (AddedToPiggy _ toPiggy amount) = do
   pure $ Map.adjust (deposit amount) toPiggy balances
 onEvent balances (TakenFromPiggy _ fromPiggy maybeNotAvailableAmount) = do
   piggy <- findPiggy fromPiggy balances
-  newPiggy <- left PiggyHasNotEnoughMoney $ withdraw maybeNotAvailableAmount piggy
+  newPiggy <- left PiggyHasNotEnoughMoney $ fst <$> withdraw maybeNotAvailableAmount piggy
   pure $ Map.adjust (const newPiggy) fromPiggy balances
+onEvent balances (MovedBetweenPiggies _ fromPiggy toPiggy maybeNotAvailableAmount) = do
+  sender <- findPiggy fromPiggy balances
+  receiver <- findPiggy toPiggy balances
+  (newSender, availableAmount) <- left PiggyHasNotEnoughMoney $ withdraw maybeNotAvailableAmount sender
+  let newReceiver = deposit availableAmount receiver
+  pure $ Map.adjust (const newReceiver) toPiggy $ Map.adjust (const newSender) fromPiggy balances
 onEvent balances _ = pure balances
 
 findPiggy :: Id Piggy -> PiggyBalances -> Either PiggyBalanceError Piggy

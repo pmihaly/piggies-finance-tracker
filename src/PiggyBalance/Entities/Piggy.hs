@@ -52,7 +52,7 @@ mkPiggy pId pBalance = pure $ unsafePiggy pId pBalance
 deposit :: NonZero (Positive Money) -> Piggy -> Piggy
 deposit amount piggy = piggy & balance %~ addMoney amount
 
-withdraw :: MaybeNotAvailable (NonZero (Positive Money)) -> Piggy -> Either PiggyError Piggy
+withdraw :: MaybeNotAvailable (NonZero (Positive Money)) -> Piggy -> Either PiggyError (Piggy, NonZero (Positive Money))
 withdraw mnaAmount piggy = do
   amount <- left InsufficientFunds $ unmkMaybeNotAvailableMoney mnaAmount $ piggy ^. balance
-  pure $ piggy & balance %~ subtractMoney amount
+  pure (piggy & balance %~ subtractMoney amount, amount)

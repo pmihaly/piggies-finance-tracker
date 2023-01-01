@@ -4,15 +4,20 @@ module Main (main) where
 
 import Application.CLI.InputOutputFile (InputOutputFile (..), fromStateWithEvents, toState)
 import Application.Shared.PlayEvents (playEvents)
-import Control.Category ((>>>))
 import Data.ByteString qualified as BS
-import Data.Yaml (ParseException, decodeFileEither, encode)
+import Data.Yaml (decodeFileEither, encode)
 import System.Environment (getArgs)
 import System.Exit (die)
 
 main :: IO ()
-main =
-  getArgs
-    >>= (head >>> decodeFileEither :: [String] -> IO (Either ParseException InputOutputFile))
-    >>= either (show >>> die) (\file -> pure $ playEvents (toState file) (events file))
-    >>= either (show >>> die) (fromStateWithEvents [] >>> encode >>> BS.putStr)
+main = do
+  filePath <- head <$> getArgs
+  fileEither <- decodeFileEither filePath
+  case fileEither of
+    Left err -> die $ show err
+    Right file -> do
+      let state = toState file
+      let events' = events file
+      case playEvents state events' of
+        Left err -> die $ show err
+        Right newState -> BS.putStr $ encode $ fromStateWithEvents events' newState

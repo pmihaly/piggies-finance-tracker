@@ -1,6 +1,9 @@
 build:
 	stack build
 
+install:
+	stack install
+
 run-sample:
 	stack run ./sample.yaml
 

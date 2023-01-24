@@ -24,7 +24,7 @@ spec =
         do
           let notExistingPiggyId = unsafeId (unsafeText50 "not-existing-piggy-id")
           let notReferencedPiggyId = unsafeId (unsafeText50 "not-referenced-piggy-id")
-          let balances = Map.singleton notReferencedPiggyId (unsafePiggy notReferencedPiggyId (unsafeBalance (unsafeMoney 1000)))
+          let balances = Map.singleton notReferencedPiggyId (unsafePiggy (unsafeBalance (unsafeMoney 1000)))
           let event = AddedToPiggy (unsafeId (unsafeText50 "event-id")) notExistingPiggyId (unsafeNonZero (unsafePositive (unsafeMoney 1000)))
 
           PiggyBalance.onEvent balances event `shouldBe` Left (PiggyNotFound notExistingPiggyId)
@@ -32,17 +32,17 @@ spec =
       it "should add deposited amount to the balance" $
         do
           let piggyId = unsafeId (unsafeText50 "not-existing-piggy-id")
-          let balances = Map.singleton piggyId (unsafePiggy piggyId (unsafeBalance (unsafeMoney 1000)))
+          let balances = Map.singleton piggyId (unsafePiggy (unsafeBalance (unsafeMoney 1000)))
           let event = AddedToPiggy (unsafeId (unsafeText50 "event-id")) piggyId (unsafeNonZero (unsafePositive (unsafeMoney 1000)))
 
-          PiggyBalance.onEvent balances event `shouldBe` Right (Map.singleton piggyId (unsafePiggy piggyId (unsafeBalance (unsafeMoney 2000))))
+          PiggyBalance.onEvent balances event `shouldBe` Right (Map.singleton piggyId (unsafePiggy (unsafeBalance (unsafeMoney 2000))))
 
     describe "TakenFromPiggy" $ do
       it "should return PiggyNotFound if event references not existing piggy" $
         do
           let notExistingPiggyId = unsafeId (unsafeText50 "not-existing-piggy-id")
           let notReferencedPiggyId = unsafeId (unsafeText50 "not-referenced-piggy-id")
-          let balances = Map.singleton notReferencedPiggyId (unsafePiggy notReferencedPiggyId (unsafeBalance (unsafeMoney 1000)))
+          let balances = Map.singleton notReferencedPiggyId (unsafePiggy (unsafeBalance (unsafeMoney 1000)))
           let event = TakenFromPiggy (unsafeId (unsafeText50 "event-id")) notExistingPiggyId (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 1000))))
 
           PiggyBalance.onEvent balances event `shouldBe` Left (PiggyNotFound notExistingPiggyId)
@@ -50,7 +50,7 @@ spec =
       it "should return PiggyHasNotEnoughMoney if trying to withdraw more what is available" $
         do
           let piggyId = unsafeId (unsafeText50 "some-piggy-id")
-          let balances = Map.singleton piggyId (unsafePiggy piggyId (unsafeBalance (unsafeMoney 1000)))
+          let balances = Map.singleton piggyId (unsafePiggy (unsafeBalance (unsafeMoney 1000)))
           let event = TakenFromPiggy (unsafeId (unsafeText50 "event-id")) piggyId (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 2000))))
 
           PiggyBalance.onEvent balances event `shouldBe` Left (PiggyHasNotEnoughMoney $ InsufficientFunds $ NotEnoughMoney $ unsafeMoney 2000)
@@ -58,17 +58,17 @@ spec =
       it "should subtract the withdrawn amount from the balance" $
         do
           let piggyId = unsafeId (unsafeText50 "some-piggy-id")
-          let balances = Map.singleton piggyId (unsafePiggy piggyId (unsafeBalance (unsafeMoney 500)))
+          let balances = Map.singleton piggyId (unsafePiggy (unsafeBalance (unsafeMoney 500)))
           let event = TakenFromPiggy (unsafeId (unsafeText50 "event-id")) piggyId (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 300))))
 
-          PiggyBalance.onEvent balances event `shouldBe` Right (Map.singleton piggyId $ unsafePiggy piggyId $ unsafeBalance $ unsafeMoney 200)
+          PiggyBalance.onEvent balances event `shouldBe` Right (Map.singleton piggyId $ unsafePiggy $ unsafeBalance $ unsafeMoney 200)
 
     describe "MovedBetweenPiggies" $ do
       it "should return PiggyNotFound if event references not existing piggy (sender)" $
         do
           let notExistingSender = unsafeId (unsafeText50 "not-existing-sender")
           let receiver = unsafeId (unsafeText50 "receiver")
-          let balances = Map.singleton receiver (unsafePiggy receiver (unsafeBalance (unsafeMoney 1000)))
+          let balances = Map.singleton receiver (unsafePiggy (unsafeBalance (unsafeMoney 1000)))
           let event = MovedBetweenPiggies (unsafeId (unsafeText50 "event-id")) notExistingSender receiver (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 1000))))
 
           PiggyBalance.onEvent balances event `shouldBe` Left (PiggyNotFound notExistingSender)
@@ -77,7 +77,7 @@ spec =
         do
           let sender = unsafeId (unsafeText50 "sender")
           let notExistingReceiver = unsafeId (unsafeText50 "not-existing-receiver")
-          let balances = Map.singleton sender (unsafePiggy sender (unsafeBalance (unsafeMoney 1000)))
+          let balances = Map.singleton sender (unsafePiggy (unsafeBalance (unsafeMoney 1000)))
           let event = MovedBetweenPiggies (unsafeId (unsafeText50 "event-id")) sender notExistingReceiver (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 1000))))
 
           PiggyBalance.onEvent balances event `shouldBe` Left (PiggyNotFound notExistingReceiver)
@@ -86,7 +86,7 @@ spec =
         do
           let sender = unsafeId (unsafeText50 "sender")
           let receiver = unsafeId (unsafeText50 "receiver")
-          let balances = Map.union (Map.singleton sender (unsafePiggy sender (unsafeBalance (unsafeMoney 200)))) (Map.singleton receiver (unsafePiggy receiver (unsafeBalance (unsafeMoney 500))))
+          let balances = Map.union (Map.singleton sender (unsafePiggy (unsafeBalance (unsafeMoney 200)))) (Map.singleton receiver (unsafePiggy (unsafeBalance (unsafeMoney 500))))
           let event = MovedBetweenPiggies (unsafeId (unsafeText50 "event-id")) sender receiver (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 1000))))
 
           PiggyBalance.onEvent balances event `shouldBe` Left (PiggyHasNotEnoughMoney $ InsufficientFunds $ NotEnoughMoney $ unsafeMoney 1000)
@@ -95,7 +95,7 @@ spec =
         do
           let sender = unsafeId (unsafeText50 "sender")
           let receiver = unsafeId (unsafeText50 "receiver")
-          let balances = Map.union (Map.singleton sender (unsafePiggy sender (unsafeBalance (unsafeMoney 500)))) (Map.singleton receiver (unsafePiggy receiver (unsafeBalance (unsafeMoney 500))))
+          let balances = Map.union (Map.singleton sender (unsafePiggy (unsafeBalance (unsafeMoney 500)))) (Map.singleton receiver (unsafePiggy (unsafeBalance (unsafeMoney 500))))
           let event = MovedBetweenPiggies (unsafeId (unsafeText50 "event-id")) sender receiver (MaybeNotAvailable (unsafeNonZero (unsafePositive (unsafeMoney 300))))
 
-          PiggyBalance.onEvent balances event `shouldBe` Right (Map.union (Map.singleton sender (unsafePiggy sender (unsafeBalance (unsafeMoney 200)))) (Map.singleton receiver (unsafePiggy receiver (unsafeBalance (unsafeMoney 800)))))
+          PiggyBalance.onEvent balances event `shouldBe` Right (Map.union (Map.singleton sender (unsafePiggy (unsafeBalance (unsafeMoney 200)))) (Map.singleton receiver (unsafePiggy (unsafeBalance (unsafeMoney 800)))))

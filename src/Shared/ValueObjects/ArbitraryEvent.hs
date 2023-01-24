@@ -6,7 +6,7 @@ module Shared.ValueObjects.ArbitraryEvent (ArbitraryEvent (..), arbitraryEventFr
 import Application.Shared.State (State, piggyBalances)
 import Data.HashMap.Strict qualified as Map
 import Lens.Micro
-import PiggyBalance.Entities.Piggy (balance, piggyId)
+import PiggyBalance.Entities.Piggy (balance)
 import Shared.Entities.Event.Event (Event (..))
 import Shared.ValueObjects.MaybeNotAvailable (arbitraryMaybeNotAvailableMoney)
 import Test.QuickCheck (Arbitrary (arbitrary), Gen, elements)
@@ -34,27 +34,24 @@ arbitraryEventFromState s =
 arbitraryAddedToPiggy :: State -> Gen Event
 arbitraryAddedToPiggy s = do
   eId <- arbitrary
-  eToPiggy <- (^. piggyId) <$> elements (Map.elems $ s ^. piggyBalances)
+  eToPiggy <- elements (Map.keys $ s ^. piggyBalances)
   AddedToPiggy eId eToPiggy <$> arbitrary
 
 arbitraryTakenFromPiggy :: State -> Gen Event
 arbitraryTakenFromPiggy s = do
-  fromPiggy <- elements (Map.elems $ s ^. piggyBalances)
+  (eFromPiggyId, fromPiggy) <- elements (Map.toList $ s ^. piggyBalances)
 
   eId <- arbitrary
-  let eFromPiggyId = fromPiggy ^. piggyId
   eAmount <- arbitraryMaybeNotAvailableMoney $ fromPiggy ^. balance
 
   pure $ TakenFromPiggy eId eFromPiggyId eAmount
 
 arbitraryMovedBetweenPiggies :: State -> Gen Event
 arbitraryMovedBetweenPiggies s = do
-  fromPiggy <- elements (Map.elems $ s ^. piggyBalances)
-  toPiggy <- elements (Map.elems $ s ^. piggyBalances)
+  (eFromPiggyId, fromPiggy) <- elements (Map.toList $ s ^. piggyBalances)
+  eToPiggyId <- elements (Map.keys $ s ^. piggyBalances)
 
   eId <- arbitrary
-  let eFromPiggyId = fromPiggy ^. piggyId
-  let eToPiggyId = toPiggy ^. piggyId
   eAmount <- arbitraryMaybeNotAvailableMoney $ fromPiggy ^. balance
 
   pure $ MovedBetweenPiggies eId eFromPiggyId eToPiggyId eAmount
@@ -62,14 +59,14 @@ arbitraryMovedBetweenPiggies s = do
 arbitraryAssetBought :: State -> Gen Event
 arbitraryAssetBought s = do
   eId <- arbitrary
-  ePiggy <- (^. piggyId) <$> elements (Map.elems $ s ^. piggyBalances)
+  ePiggy <- elements (Map.keys $ s ^. piggyBalances)
   eAssetId <- arbitrary
   AssetBought eId ePiggy eAssetId <$> arbitrary
 
 arbitraryAssetSold :: State -> Gen Event
 arbitraryAssetSold s = do
   eId <- arbitrary
-  ePiggy <- (^. piggyId) <$> elements (Map.elems $ s ^. piggyBalances)
+  ePiggy <- elements (Map.keys $ s ^. piggyBalances)
   eAssetId <- arbitrary
   AssetSold eId ePiggy eAssetId <$> arbitrary
 

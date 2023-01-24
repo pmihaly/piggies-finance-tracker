@@ -3,14 +3,11 @@
 
 module Application.Shared.State (State (State), appliedEvents, piggyBalances) where
 
-import Control.Arrow ((&&&))
 import Data.Aeson (ToJSON)
 import Data.HashMap.Strict qualified as Map
 import Data.HashSet qualified as Set
 import GHC.Generics (Generic)
-import Lens.Micro
 import Lens.Micro.Platform (makeLenses)
-import PiggyBalance.Entities.Piggy (piggyId)
 import PiggyBalance.PiggyBalances (PiggyBalances)
 import Shared.Entities.Event.Event (Event)
 import Shared.ValueObjects.Id (Id)
@@ -26,7 +23,7 @@ instance ToJSON State
 
 instance Arbitrary State where
   arbitrary = do
-    piggyBalances <- Map.fromList . fmap ((^. piggyId) &&& id) <$> arbitrary `suchThat` (/= [])
+    piggyBalances <- Map.fromList <$> arbitrary `suchThat` (/= [])
     appliedEvents <- Set.fromList <$> arbitrary
     pure $ State piggyBalances appliedEvents
 
